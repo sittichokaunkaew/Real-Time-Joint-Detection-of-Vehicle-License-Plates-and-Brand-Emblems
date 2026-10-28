@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <!-- Jquery DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+    <!-- FeatherLight -->
+    <link href="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
+        rel="stylesheet" />
+
+    <!--static  -->
+    <link rel="stylesheet" type="text/css" href="../static/index.css">
+
+    <!-- sweeatalert2 -->
+    <!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+
+    <style>
+        .text-wrap {
+            white-space: pre-line;
+
+        }
+
+        .width-200 {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<div class="container position-relative" data-aos="fade-up">
+    <div class="table-responsive">
+        <br>
+        <center>
+            <div class="mb-5">
+                <button name=" submitSearch" id="btn-search" type="submit" class="btn btn-primary"
+                    style="width:180px;height:40px">ดูประวัติการใช้รถ</button>
+                <button style="width:180px;height:40px" type="submit" id="btn-reserve"
+                    class=" btn btn-outline-primary">ไปหน้าจองรถ</button>
+                <button name="clear" id="btn-clear" onclick="window.location.reload()" type="submit"
+                    class="btn btn-outline-secondary" style="width:180px;height:40px">ล้างข้อมูลใหม่</button>
+                <button name="calendar" id="btn-calendar"
+                    onclick="window.open('https://app.powerbi.com/reportEmbed?reportId=28a16415-56c4-4ca4-9a00-2377e9a4c35f&autoAuth=true&ctid=5db8bf0e-8592-4ed0-82b2-a6d4d77933d4&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXNvdXRoLWVhc3QtYXNpYS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D')"
+                    type="submit" class="btn btn-outline-secondary"
+                    style="width:180px;height:40px">ดูปฏิทินจองใช้</button>
+                <button name="PoolSTS" id="btn-PoolSTS"
+                    onclick="window.open('http://sccts.ddns.net/carservice/car/bc_onepage.asp?input=u')" type="submit"
+                    class="btn btn-outline-secondary" style="width:180px;height:40px">จองรถโรงงาน</button>
+            </div>
+        </center>
+        <table id="dttb" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>License Plate</th>
+                    <th>Province</th>
+                    <th>Brand</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Jquery -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+<!-- FeatherLight -->
+<script src="//code.jquery.com/jquery-latest.js"></script>
+<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
+    charset="utf-8"></script>
+
+<!-- Sweetalert2  -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript" src="../static/index.js"></script>
+
+<!-- Jquery DataTables -->
+<script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#dttb').DataTable({
+            responsive: true,
+            scrollY: false,
+            scrollX: false,
+            "searching": false,
+            "paging": false,
+            "ordering": true,
+            "info": false,
+            ajax: '/api/table',
+            columns: [
+                {
+                    data: 'id',
+                    "defaultContent": "-",
+                    width: '5%'
+                },
+                {
+                    data: 'plate',
+                    "defaultContent": "-",
+                    width: '10%',
+                    "render": function (data, type, row) {
+                        return data.split("\n").join("<br/>");
+                    },
+                },
+                {
+                    data: 'province',
+                    "defaultContent": "-",
+                    width: '10%',
+                    "render": function (data, type, row) {
+                        return data.split("\n").join("<br/>");
+                    }
+                },
+                {
+                    data: 'brand',
+                    "defaultContent": "-",
+                    width: '10%',
+                },
+                {
+                    data: 'image',
+                    "defaultContent": "-",
+                    width: '5%',
+                    render: function (data, type, row) {
+                        if (data === null || data === "") {
+                            return "-"
+                        } else {
+                            return `<a href="/static/upload/${data}" data-featherlight><img src="/static/upload/${data}" width="70%"></a>`;
+                        }
+                    },
+                    orderable: false, searchable: false
+                },
+            ],
+            columnDefs: [
+                {
+                    render: function (data, type, full, meta) {
+                        return "<div class='text-wrap width-200'>" + data + "</div>";
+                    },
+                    targets: 3
+                }
+            ]
+
+        });
+    });
+</script>
+</body>
+
+</html>
